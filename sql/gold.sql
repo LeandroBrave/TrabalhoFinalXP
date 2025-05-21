@@ -1,5 +1,5 @@
 CREATE TABLE gold.dim_tempo (
-	"data" date not NULL,
+	"data" date NOT NULL,
 	ano int4 NULL,
 	mes int4 NULL,
 	nome_mes text NULL,
@@ -10,8 +10,7 @@ CREATE TABLE gold.dim_tempo (
 	trimestre int4 NULL,
 	eh_fim_de_semana bool NULL,
 	ano_mes text NULL,
-	--id_data int8 not NULL,
-	eh_feriado bool null
+	eh_feriado bool NULL
 );
 
 ALTER TABLE gold.dim_tempo
@@ -23,34 +22,33 @@ CREATE TABLE gold.dim_tipo (
 	CONSTRAINT dim_tipo_pkey PRIMARY KEY (id_tipo)
 );
 
-
 ALTER TABLE gold.dim_tipo
 ADD CONSTRAINT dim_tipo_ukey UNIQUE (tipo);
 
 CREATE TABLE gold.fato_dadostesouro_base (
-    id_fato SERIAL PRIMARY KEY,
-    data_base_ano_mes text NOT NULL,
-    id_tipo INT NOT NULL,
-    compra FLOAT8 NOT NULL,
-    venda FLOAT8 NOT NULL,
-    pu_compra FLOAT8 NOT NULL,
-    pu_venda FLOAT8 NOT NULL,
-    pu_base FLOAT8 NOT NULL,
-    dt_update TIMESTAMP,
-    CONSTRAINT fk_tipo FOREIGN KEY (id_tipo)
-        REFERENCES gold.dim_tipo(id_tipo)
+	id_fato serial4 NOT NULL,
+	data_base_ano_mes text NOT NULL,
+	id_tipo int4 NOT NULL,
+	compra float8 NOT NULL,
+	venda float8 NOT NULL,
+	pu_compra float8 NOT NULL,
+	pu_venda float8 NOT NULL,
+	pu_base float8 NOT NULL,
+	dt_update timestamp NULL,
+	CONSTRAINT fato_dadostesouro_base_pkey PRIMARY KEY (id_fato),
+	CONSTRAINT fk_tipo FOREIGN KEY (id_tipo) REFERENCES gold.dim_tipo(id_tipo)
 );
 
 CREATE TABLE gold.fato_dadostesouro_venc (
-    id_fato SERIAL PRIMARY KEY,
-    data_vencimento_ano_mes text NOT NULL,
-    id_tipo INT NOT NULL,
-    compra FLOAT8 NOT NULL,
-    venda FLOAT8 NOT NULL,
-    pu_compra FLOAT8 NOT NULL,
-    pu_venda FLOAT8 NOT NULL,
-    pu_base FLOAT8 NOT NULL,
-    dt_update TIMESTAMP,
-    CONSTRAINT fk_tipo FOREIGN KEY (id_tipo)
-        REFERENCES gold.dim_tipo(id_tipo)
+	id_fato serial4 NOT NULL,
+	data_vencimento_ano_mes text NOT NULL,
+	id_tipo int4 NOT NULL,
+	compra float8 NOT NULL,
+	venda float8 NOT NULL,
+	pu_compra float8 NOT NULL,
+	pu_venda float8 NOT NULL,
+	pu_base float8 NOT NULL,
+	dt_update timestamp NULL,
+	CONSTRAINT fato_dadostesouro_venc_pkey PRIMARY KEY (id_fato),
+	CONSTRAINT fk_tipo FOREIGN KEY (id_tipo) REFERENCES gold.dim_tipo(id_tipo)
 );
