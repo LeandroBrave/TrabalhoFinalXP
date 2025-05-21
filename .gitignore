@@ -1,0 +1,31 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+#Projeto
+Testes/
+
+# Virtual environment
+venv/
+.env
+.env_kafka_connect
+*.env
+
+# VSCode
+.vscode/
+
+# Pytest
+.cache/
+.pytest_cache/
+
+# Logs
+*.log
+
+# IDEs
+.idea/
+
+# Credentials
+*.key
+*.pem
+*.crt
