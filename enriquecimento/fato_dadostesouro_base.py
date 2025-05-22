@@ -35,7 +35,7 @@ class FatoDadosTesouroBase(BaseETL):
               d.pu_base,
               d.dt_update
             FROM silver.dadostesouropre d
-            JOIN gold.dim_tipo t ON LOWER(t.tipo) = 'pre'
+            JOIN gold.dim_tipo t ON LOWER(t.tipo) = 'pre-fixados'
         """
 
         df_ipca = pd.read_sql(query_ipca, self.engine)
