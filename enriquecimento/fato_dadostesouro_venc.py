@@ -1,13 +1,9 @@
-import pandas as pd
-from sqlalchemy import create_engine
-from utils.base_etl import BaseETL  
+from pyspark.sql.functions import date_format, sum as _sum, max as _max
+from utils.base_etl import BaseETL
 
 class FatoDadosTesouroVenc(BaseETL):
     def __init__(self, app_name="ETL Fato Dados Tesouro Venc"):
         super().__init__(app_name=app_name)
-        self.engine = create_engine(
-            f"postgresql+psycopg2://{self.pg_user}:{self.pg_password}@{self.pg_host}:{self.pg_port}/{self.pg_dbname}"
-        )
 
     def load_fato_tesouro_venc(self):
         query_ipca = """
@@ -38,22 +34,46 @@ class FatoDadosTesouroVenc(BaseETL):
             JOIN gold.dim_tipo t ON LOWER(t.tipo) = 'pre-fixados'
         """
 
-        df_ipca = pd.read_sql(query_ipca, self.engine)
-        df_pre = pd.read_sql(query_pre, self.engine)
-        df = pd.concat([df_ipca, df_pre], ignore_index=True)
+        df_ipca = self.spark.read \
+            .format("jdbc") \
+            .option("url", f"jdbc:postgresql://{self.pg_host}:{self.pg_port}/{self.pg_dbname}") \
+            .option("dbtable", f"({query_ipca}) as ipca") \
+            .option("user", self.pg_user) \
+            .option("password", self.pg_password) \
+            .option("driver", "org.postgresql.Driver") \
+            .load()
 
-        # Criar campo ano_mes de data de vencimento
-        df["data_vencimento_ano_mes"] = pd.to_datetime(df["data_vencimento"]).dt.strftime("%Y%m")
+        df_pre = self.spark.read \
+            .format("jdbc") \
+            .option("url", f"jdbc:postgresql://{self.pg_host}:{self.pg_port}/{self.pg_dbname}") \
+            .option("dbtable", f"({query_pre}) as pre") \
+            .option("user", self.pg_user) \
+            .option("password", self.pg_password) \
+            .option("driver", "org.postgresql.Driver") \
+            .load()
 
-        # Agregação por vencimento
-        df_agg = df.groupby(["data_vencimento_ano_mes", "id_tipo"], as_index=False).agg({
-            "compra": "sum",
-            "venda": "sum",
-            "pu_compra": "sum",
-            "pu_venda": "sum",
-            "pu_base": "sum",
-            "dt_update": "max"
-        })
+        df = df_ipca.unionByName(df_pre)
 
-        # Carrega na nova fato
-        df_agg.to_sql("fato_dadostesouro_venc", self.engine, schema="gold", if_exists="append", index=False)
+        # Criar coluna ano_mes de data de vencimento
+        df = df.withColumn("data_vencimento_ano_mes", date_format("data_vencimento", "yyyyMM"))
+
+        # Agregação
+        df_agg = df.groupBy("data_vencimento_ano_mes", "id_tipo").agg(
+            _sum("compra").alias("compra"),
+            _sum("venda").alias("venda"),
+            _sum("pu_compra").alias("pu_compra"),
+            _sum("pu_venda").alias("pu_venda"),
+            _sum("pu_base").alias("pu_base"),
+            _max("dt_update").alias("dt_update")
+        )
+
+        # Escrita no Postgres
+        df_agg.write \
+            .format("jdbc") \
+            .option("url", f"jdbc:postgresql://{self.pg_host}:{self.pg_port}/{self.pg_dbname}") \
+            .option("dbtable", "gold.fato_dadostesouro_venc") \
+            .option("user", self.pg_user) \
+            .option("password", self.pg_password) \
+            .option("driver", "org.postgresql.Driver") \
+            .mode("append") \
+            .save()
