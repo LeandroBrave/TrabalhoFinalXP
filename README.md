@@ -19,6 +19,11 @@ Este repositório contém um pipeline de dados em tempo real que extrai dados do
 
 ---
 
+## 🚧 Melhorias Futuras
+
+- Criar orquestração, provavelmente com airflow
+
+
 ## 🚀 Como Rodar o Projeto
 
 ### Passo 1: Clonar o repositório
@@ -51,7 +56,7 @@ Este repositório contém um pipeline de dados em tempo real que extrai dados do
 
     Suba todos os serviços contidos no arquivo docker-compose:
 
-    **comando:** docker-compose up
+    **Comando:** docker-compose up
 
 ### Passo 4: Setup Postgres
 
@@ -65,17 +70,17 @@ Este repositório contém um pipeline de dados em tempo real que extrai dados do
     PG_PORT=5432
     PG_DRIVER=org.postgresql.Driver
 
-### Passo 5: Camada Bronze ###
+### Passo 5: Camada Bronze
     Execute o arquivo:
      Na pasta ingestao:
              importar.ipynb
 
-### Passo 6: Camadas Silver e Gold ###
+### Passo 6: Camadas Silver e Gold
     Crie o schema Silver e o schema Gold no postgres
     Rode os respectivos arquivos SQL em cada schema
     Execute o codigo main.py
 
-### Passo 7: Kafka ###
+### Passo 7: Kafka
     Entre na maquina do broker que o docker subiu:
         **Comando:** docker exec -it broker bash
     
@@ -90,7 +95,7 @@ Este repositório contém um pipeline de dados em tempo real que extrai dados do
     
     Digite exit para voltar ao seu terminal local
 
-### Passo 8: Criar os conectores Source ###
+### Passo 8: Criar os conectores Source
     Os conectores do tipo source são os produtores. Eles jogam dados dentro do topico kafka.
     Criaremos 2 deles:
     **Comandos:**
@@ -108,7 +113,7 @@ Este repositório contém um pipeline de dados em tempo real que extrai dados do
         kafka-console-consumer --bootstrap-server localhost:9092 --topic postgres-dadostesouroipca --from-beginning
         kafka-console-consumer --bootstrap-server localhost:9092 --topic postgres-dadostesouropre --from-beginning
 
-### Passo 9: Criar os conectores sink ###
+### Passo 9: Criar os conectores sink
     Os conectores do tipo sink são os consumidores. Eles leem dados do topico kafka e escrevem em algum lugar.
     Criaremos 2 deles:
     **Comandos:**
@@ -116,5 +121,5 @@ Este repositório contém um pipeline de dados em tempo real que extrai dados do
         curl -X POST -H "Content-Type: application/json" --data @connect_s3_sink_ipca.config http://localhost:8083/connectors
         curl -X POST -H "Content-Type: application/json" --data @connect_s3_sink_pre.config http://localhost:8083/connectors
 
-### Passo 10: Cheque seu AWS s3 ###
+### Passo 10: Cheque seu AWS s3
     Após configuração do sink os dados confira se os dados chegaram nos buckets que foram criados no passo 2
