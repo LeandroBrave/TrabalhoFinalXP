@@ -35,6 +35,13 @@ Este repositório contém um pipeline de dados em tempo real que extrai dados do
         AWS_ACCESS_KEY_ID=[PREENCHA COM O VALOR DO SEU USUARIO AWS]
         AWS_SECRET_ACCESS_KEY=[PREENCHA COM O VALOR DO SEU USUARIO AWS]
 
+    Acesse o S3 e crie 2 buckets com a seguinte estrutura de pastas:
+    Buckets:
+        dados-pre
+        dados-ipca
+    Em cada bucket crie a estrutura de pastas:
+        raw_data/kafka
+
 ### Passo 3: Docker
     Crie a imagem kafka:
     **Comando:**
@@ -110,3 +117,4 @@ Este repositório contém um pipeline de dados em tempo real que extrai dados do
         curl -X POST -H "Content-Type: application/json" --data @connect_s3_sink_pre.config http://localhost:8083/connectors
 
 ### Passo 10: Cheque seu AWS s3 ###
+    Após configuração do sink os dados confira se os dados chegaram nos buckets que foram criados no passo 2
