@@ -22,6 +22,8 @@ Este repositório contém um pipeline de dados em tempo real que extrai dados do
 ## 🚧 Melhorias Futuras
 
 - Criar orquestração, provavelmente com airflow
+- Fazer deploy automatico de arquivos de configuração quando novos consumidores ou produtores entrarem na pipeline
+- suporte a mais plataformas alem do posgres e s3
 
 
 ## 🚀 Como Rodar o Projeto
