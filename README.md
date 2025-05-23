@@ -31,6 +31,7 @@ Crie uma conta amazon se não tiver uma
 Crie um usuario através do AWS IAM
 Crie um arquivo no projeto nomeado: .env_kafka_connect
 Escreva no .env_kafka_connect o conteudo abaixo:
+    
     AWS_ACCESS_KEY_ID=[PREENCHA COM O VALOR DO SEU USUARIO AWS]
     AWS_SECRET_ACCESS_KEY=[PREENCHA COM O VALOR DO SEU USUARIO AWS]
 
