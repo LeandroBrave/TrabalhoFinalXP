@@ -36,6 +36,12 @@ Escreva no .env_kafka_connect o conteudo abaixo:
     AWS_SECRET_ACCESS_KEY=[PREENCHA COM O VALOR DO SEU USUARIO AWS]
 
 ### Passo 3: Docker
+Crie a imagem kafka:
+**Comando:**
+
+    cd connect/custom-kafka-connectors-image
+    docker buildx build . -t connect-custom:1.0.0
+
 Suba todos os serviços contidos no arquivo docker-compose:
 
 **comando:** docker-compose up
