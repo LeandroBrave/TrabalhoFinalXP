@@ -37,14 +37,17 @@ Escreva no .env_kafka_connect o conteudo abaixo:
 
 ### Passo 3: Docker
 Suba todos os serviços contidos no arquivo docker-compose:
+
 **comando:** docker-compose up
 
 ### Passo 4: Setup Postgres
+
 **crie um arquivo .env com o conteudo abaixo:**
-PG_URL=jdbc:postgresql://localhost:5432/postgres
-PG_USER=postgres
-PG_PASSWORD=postgres
-PG_DB=postgres
-PG_HOST=localhost
-PG_PORT=5432
-PG_DRIVER=org.postgresql.Driver
+
+    PG_URL=jdbc:postgresql://localhost:5432/postgres
+    PG_USER=postgres
+    PG_PASSWORD=postgres
+    PG_DB=postgres
+    PG_HOST=localhost
+    PG_PORT=5432
+    PG_DRIVER=org.postgresql.Driver
